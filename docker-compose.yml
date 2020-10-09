@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  web:
+    container_name: web-server # Container name for DNS resolution
+    image: httpd  # this will use httpd:latest
+    ports:
+        - "5000:80" # HOST:CONTAINER
+    networks: 
+        - myapp_net # Network Name
+  ubuntu:
+    container_name: ubuntu
+    image: alpine
+    stdin_open: true # docker run -i
+    tty: true # docker run -t
+    networks: 
+        - myapp_net
+
+networks:
+    myapp_net: # Using default driver bridge
