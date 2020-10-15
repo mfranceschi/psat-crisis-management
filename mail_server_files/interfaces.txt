@@ -1,0 +1,12 @@
+#/etc/network/interfaces
+
+# The primary network interface
+auto enp0s3
+iface enp0s3 inet static
+ address 10.0.2.15
+ netmask 255.255.255.0
+ network 192.0.2.0
+ broadcast 10.0.2.255
+ gateway 10.0.2.2
+ dns-search mondomaine.fr
+ dns-nameservers 10.0.2.15

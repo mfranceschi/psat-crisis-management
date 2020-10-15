@@ -1,0 +1,24 @@
+#etc/bind/named.conf.local
+
+//
+// Do any local configuration here
+//
+
+// Consider adding the 1918 zones here, if they are not used in your
+// organization
+//include "/etc/bind/zones.rfc1918";
+
+zone "mondomaine.fr" {
+        type master;
+        file "/etc/bind/db.mondomaine.fr";
+};
+
+zone "2.0.10.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.2.0.10";
+};
+
+zone "0.0.127.in-addr.arpa" {
+        type master;
+        file "/etc/bind/db.0.0.127";
+};

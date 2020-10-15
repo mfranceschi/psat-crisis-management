@@ -1,0 +1,14 @@
+#/etc/bind/db.mondomaine.fr
+
+$TTL    604800
+@       IN      SOA     mail.mondomaine.fr. admin.mondomaine.fr.        (
+030512  ; Serial
+604800  ; Refresh
+86400   ; Retry
+2419200 ; Expire
+604800 ); Negative Cache TTL
+;
+@                 IN      NS              mail
+IN                MX    10               mail
+IN                A                           10.0.2.15
+mail            IN       A                10.0.2.15
