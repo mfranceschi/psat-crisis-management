@@ -1,13 +1,5 @@
 # brute force ssh
 
-"""
-Explanation:
-The program will run a loop (the "main loop") and attempt to connect by SSH to a remote computer.
-The loop will run until a timer elapses (controlled by "DURATION_SECONDS"), and it will iterate over a list of common passwords.
-The authentication must not succeed by using that list.
-At the end, we do a succesful login attempt to demonstrate that we can actually connect to SSH.
-"""
-
 from datetime import datetime, timedelta
 from time import sleep
 from typing import *

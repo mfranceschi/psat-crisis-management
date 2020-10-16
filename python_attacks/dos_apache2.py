@@ -1,12 +1,5 @@
 # dos_apache2
 
-"""
-Explanation:
-Simple DOS against a specific URL.
-We create several threads and each thread runs several times the same GET request.
-We do a first attempt to ensure that the URL is reachable and returns a non-error HTTP status code.
-"""
-
 import requests
 import threading
 
