@@ -22,7 +22,7 @@ if (isset($_POST['uploadBtn']) && $_POST['uploadBtn'] == 'Upload')
 
       if(move_uploaded_file($fileTmpPath, $dest_path)) 
       {
-        $message ='File is successfully uploaded.';
+        $message ='File was successfully uploaded to : ' . $fileTmpPath . $dest_path;
       }
       else 
       {

@@ -28,13 +28,16 @@ session_start();
       </div>
 
       <div class="jumbotron">
-      <h1 class="display-4">Hello, world!</h1>
-      <p class="lead">This is a very safe web application, don't even think about trying to hack it !!</p>
-      <hr class="my-4">
-      <p>Want to work for us and learn how to build safe and reliable apps ?</p>
-      <p class="lead">
-        <a class="btn btn-primary btn-lg" href="./joinus.php" role="button">Join us</a>
-      </p>
+        <h1>Upload your CV here!</h1>
+
+        <form method="POST" action="upload.php" enctype="multipart/form-data">
+    <div>
+      <span>Upload a File:</span>
+      <input type="file" name="uploadedFile" />
+    </div>
+
+    <input type="submit" name="uploadBtn" value="Upload" />
+  </form>
       </div>
 
   <?php

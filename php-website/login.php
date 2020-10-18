@@ -89,7 +89,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 <!DOCTYPE html>
 <html>
 <head>
-  <title>PHPSAT </title>
+    <title>My Awesome Company </title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -106,9 +106,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             <li role="presentation"><a href="login.php">Login</a></li>
             <li role="presentation"><a href="register.php">Register</a></li>
             <li role="presentation"><a href="about.php">About</a></li>
+            <li role="presentation"><a href="joinus.php">Join us</a></li>
           </ul>
         </nav>
-        <h3 class="text-muted">PHP SAT</h3>
+        <h3 class="text-muted">My Awesome Company</h3>
       </div>
 
       <div class="jumbotron">
