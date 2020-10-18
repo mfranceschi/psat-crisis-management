@@ -1,7 +1,5 @@
 echo "################## Defacing Website ################## "
 
-cd ../php-website/
-
 for filename in *.php; do
     mv $filename "${filename}.hacked"
 done
